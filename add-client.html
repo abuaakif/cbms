@@ -12,15 +12,15 @@
 
     <!-- ✅ Navbar -->
     <nav class="navbar">
-        <h2>Contracting Business Management System</h2>
+        <h2> jinnZ Contracting Co</h2>
         <a href="index.html">Logout</a>
     </nav>
 
     <!-- ✅ Navigation Buttons -->
     <div class="navigation">
-        <a href="income.html">Income</a>
-        <a href="expenses.html">Expenses</a>
-        <a href="partners.html">Partners</a>
+        <a href="dashboard.html">Home</a>
+        <a href="receivables.html">Receivables</a>
+        <a href="add-client.html">Client Registration</a>
         <a href="accounts.html">Accounts</a>
         <a href="reports.html">Reports</a>
     </div>
@@ -29,19 +29,30 @@
     <div class="form-container-wrapper">
         <div class="form-container">
             <form id="clientForm">
-
                 <div class="scrollable-content"> <!-- ✅ Scroll inside this section -->
 
                     <h3>Client Details</h3>
 
                     <div class="row">
                         <div class="col">
-                            <label>Company Number:</label>
-                            <input type="text" id="companyNumber" required>
+                            <label>Client Type:</label>
+                            <select id="clientType" required>
+                                <option value="">Select Client Type</option>
+                                <option value="Person">Person</option>
+                                <option value="Contracting Company">Contracting Company</option>
+                                <option value="Subcontractor">Subcontractor</option>
+                                <option value="Supplier">Supplier</option>
+                                <option value="Consultant">Consultant</option>
+                                <option value="Investor">Investor</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Company Name:</label>
+                            <input type="text" id="companyName">
                         </div>
                         <div class="col">
                             <label>License Number:</label>
-                            <input type="text" id="licenseNumber" required>
+                            <input type="text" id="licenseNumber">
                         </div>
                         <div class="col">
                             <label>Customer ID:</label>
@@ -93,24 +104,119 @@
                     <button type="submit">Save Client</button>
 
                 </div>
-
             </form>
+
+            <hr class="section-divider">
+            <h3>Registered Clients</h3>
+
+            <table id="clientTable">
+                <thead>
+                    <tr>
+                        <th>Client ID</th>
+                        <th>Client Type</th>
+                        <th>Contact Person</th>
+                        <th>Company</th>
+                        <th>City</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ✅ Edit & Deactivate Client Popup -->
+    <div id="clientPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <h3>Edit Client</h3>
+            <label>Client ID:</label>
+            <input type="text" id="editClientId" readonly>
+            <label>Client Type:</label>
+            <input type="text" id="editClientType" readonly>
+            <label>Contact Person:</label>
+            <input type="text" id="editContactPerson">
+            <label>Company Name:</label>
+            <input type="text" id="editCompanyName">
+            <label>City:</label>
+            <input type="text" id="editCity">
+            <label>Status:</label>
+            <select id="editStatus">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+            <button onclick="saveClientChanges()">Save Changes</button>
+            <button onclick="deactivateClient()">Deactivate Client</button>
         </div>
     </div>
 
     <script>
-        // ✅ Auto-generate unique Customer ID
-        document.addEventListener("DOMContentLoaded", function () {
-            let customerIdField = document.getElementById("customerId");
-            let uniqueID = "CUST-" + Math.floor(100000 + Math.random() * 900000); // Random 6-digit number
-            customerIdField.value = uniqueID;
-        });
+        let clients = [];
 
-        // ✅ Form submission handling
+        // ✅ Auto-generate unique Client ID
+        function generateClientId() {
+            return "CUST-" + Math.floor(100000 + Math.random() * 900000);
+        }
+
+        // ✅ Prevent duplicate registration
+        function isDuplicateClient(contactPerson, email) {
+            return clients.some(client => client.contactPerson === contactPerson || client.email === email);
+        }
+
+        // ✅ Handle form submission
         document.getElementById("clientForm").addEventListener("submit", function (event) {
             event.preventDefault();
-            alert("Client details saved successfully!");
+
+            let clientType = document.getElementById("clientType").value;
+            let companyNumber = document.getElementById("companyNumber").value;
+            let licenseNumber = document.getElementById("licenseNumber").value;
+            let contactPerson = document.getElementById("contactPerson").value;
+            let mobileNumber = document.getElementById("mobileNumber").value;
+            let email = document.getElementById("emailAddress").value;
+            let city = document.getElementById("city").value;
+
+            if (isDuplicateClient(contactPerson, email)) {
+                alert("Client already exists!");
+                return;
+            }
+
+            let clientId = generateClientId();
+            document.getElementById("customerId").value = clientId;
+
+            let newClient = { clientId, clientType, contactPerson, companyNumber, city, status: "Active" };
+            clients.push(newClient);
+
+            addClientToTable(newClient);
+            alert("Client registered successfully!");
         });
+
+        // ✅ Add client to table
+        function addClientToTable(client) {
+            let table = document.getElementById("clientTable").querySelector("tbody");
+            let row = document.createElement("tr");
+            row.innerHTML = `
+                <td><a href="#" onclick="editClient('${client.clientId}')">${client.clientId}</a></td>
+                <td>${client.clientType}</td>
+                <td>${client.contactPerson}</td>
+                <td>${client.companyNumber || "N/A"}</td>
+                <td>${client.city}</td>
+                <td>${client.status}</td>
+            `;
+            table.appendChild(row);
+        }
+
+        // ✅ Edit Client Popup
+        function editClient(clientId) {
+            let client = clients.find(c => c.clientId === clientId);
+            document.getElementById("editClientId").value = client.clientId;
+            document.getElementById("editContactPerson").value = client.contactPerson;
+            document.getElementById("editStatus").value = client.status;
+            document.getElementById("clientPopup").style.display = "block";
+        }
+
+        function closePopup() { document.getElementById("clientPopup").style.display = "none"; }
+
+        function deactivateClient() { alert("Client deactivated!"); closePopup(); }
     </script>
 
 </body>

@@ -135,7 +135,7 @@
                 </div>
                 <hr class="section-divider">
                 <h3>Invoice History</h3>
-                
+
                 <table id="invoiceHistoryTable">
                     <thead>
                         <tr>
@@ -151,7 +151,7 @@
                         <!-- Invoice history will be dynamically inserted here -->
                     </tbody>
                 </table>
-                
+
             </form>
         </div>
     </div>
@@ -162,13 +162,17 @@
 
         // ✅ Sample Data: Clients → POs → Project Details → Due Date
         const data = {
-            "CUST001": { name: "Client A", address: "123 Street, City", contact: "John Doe", POs: {
-                "PO1234": { description: "Project Alpha", dueDate: "2024-03-15" },
-                "PO5678": { description: "Project Beta", dueDate: "2024-04-10" }
-            }},
-            "CUST002": { name: "Client B", address: "456 Road, City", contact: "Jane Smith", POs: {
-                "PO9876": { description: "Project Gamma", dueDate: "2024-05-20" }
-            }}
+            "CUST001": {
+                name: "Client A", address: "123 Street, City", contact: "John Doe", POs: {
+                    "PO1234": { description: "Project Alpha", dueDate: "2024-03-15" },
+                    "PO5678": { description: "Project Beta", dueDate: "2024-04-10" }
+                }
+            },
+            "CUST002": {
+                name: "Client B", address: "456 Road, City", contact: "Jane Smith", POs: {
+                    "PO9876": { description: "Project Gamma", dueDate: "2024-05-20" }
+                }
+            }
         };
 
         // ✅ Populate Client ID Dropdown
@@ -226,35 +230,35 @@
         }
 
         // ✅ Sample Data: Invoice History
-const invoiceHistoryData = {
-    "CUST001": {
-        "PO1234": [
-            { invoiceNo: "INV001", date: "2024-01-05", total: 1200, paid: 800, balanceDue:400, dueDate: "2024-01-30" },
-            { invoiceNo: "INV002", date: "2024-02-10", total: 1500, paid: 1000, balanceDue:500, dueDate: "2024-02-28" }
-        ],
-        "PO5678": [
-            { invoiceNo: "INV003", date: "2024-03-15", total: 2000, paid: 2000, dueDate: "2024-04-05" }
-        ]
-    },
-    "CUST002": {
-        "PO9876": [
-            { invoiceNo: "INV004", date: "2024-04-01", total: 2500, paid: 500, dueDate: "2024-05-10" }
-        ]
-    }
-};
+        const invoiceHistoryData = {
+            "CUST001": {
+                "PO1234": [
+                    { invoiceNo: "INV001", date: "2024-01-05", total: 1200, paid: 800, balanceDue: 400, dueDate: "2024-01-30" },
+                    { invoiceNo: "INV002", date: "2024-02-10", total: 1500, paid: 1000, balanceDue: 500, dueDate: "2024-02-28" }
+                ],
+                "PO5678": [
+                    { invoiceNo: "INV003", date: "2024-03-15", total: 2000, paid: 2000, dueDate: "2024-04-05" }
+                ]
+            },
+            "CUST002": {
+                "PO9876": [
+                    { invoiceNo: "INV004", date: "2024-04-01", total: 2500, paid: 500, dueDate: "2024-05-10" }
+                ]
+            }
+        };
 
-// ✅ Populate Invoice History when Client ID and PO Number are Selected
-function populateInvoiceHistory() {
-    let clientID = document.getElementById("clientID").value;
-    let poNumber = document.getElementById("poNumber").value;
-    let historyTable = document.getElementById("invoiceHistoryTable").querySelector("tbody");
-    
-    historyTable.innerHTML = ""; // Clear previous data
+        // ✅ Populate Invoice History when Client ID and PO Number are Selected
+        function populateInvoiceHistory() {
+            let clientID = document.getElementById("clientID").value;
+            let poNumber = document.getElementById("poNumber").value;
+            let historyTable = document.getElementById("invoiceHistoryTable").querySelector("tbody");
 
-    if (clientID && poNumber && invoiceHistoryData[clientID] && invoiceHistoryData[clientID][poNumber]) {
-        invoiceHistoryData[clientID][poNumber].forEach(invoice => {
-            let row = document.createElement("tr");
-            row.innerHTML = `
+            historyTable.innerHTML = ""; // Clear previous data
+
+            if (clientID && poNumber && invoiceHistoryData[clientID] && invoiceHistoryData[clientID][poNumber]) {
+                invoiceHistoryData[clientID][poNumber].forEach(invoice => {
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
                 <td><a href="#" onclick="editInvoice('${invoice.invoiceNo}')">${invoice.invoiceNo}</a></td>
                 <td>${invoice.date}</td>
                 <td>$${invoice.total.toFixed(2)}</td>
@@ -262,16 +266,75 @@ function populateInvoiceHistory() {
                 <td>$${invoice.balanceDue.toFixed(2)}</td>
                 <td>${invoice.dueDate}</td>
             `;
-            historyTable.appendChild(row);
-        });
-    }
-}
+                    historyTable.appendChild(row);
+                });
+            }
+        }
 
-// ✅ Call this function when Client or PO is selected
-document.getElementById("clientID").addEventListener("change", populateInvoiceHistory);
-document.getElementById("poNumber").addEventListener("change", populateInvoiceHistory);
+        // ✅ Call this function when Client or PO is selected
+        document.getElementById("clientID").addEventListener("change", populateInvoiceHistory);
+        document.getElementById("poNumber").addEventListener("change", populateInvoiceHistory);
+
+        // ✅ Open Popup with Invoice Data
+        function editInvoice(invoiceNo) {
+            let clientID = document.getElementById("clientID").value;
+            let poNumber = document.getElementById("poNumber").value;
+            let invoiceData = invoiceHistoryData[clientID][poNumber].find(inv => inv.invoiceNo === invoiceNo);
+
+            if (invoiceData) {
+                document.getElementById("editInvoiceNo").value = invoiceData.invoiceNo;
+                document.getElementById("editInvoiceDate").value = invoiceData.date;
+                document.getElementById("editTotalAmount").value = invoiceData.total;
+                document.getElementById("editPaidAmount").value = invoiceData.paid;
+                document.getElementById("editDueDate").value = invoiceData.dueDate;
+
+                document.getElementById("invoicePopup").style.display = "block"; // Show Popup
+            }
+        }
+
+        // ✅ Close Popup
+        function closePopup() {
+            document.getElementById("invoicePopup").style.display = "none";
+        }
+
+        // ✅ Save Changes
+        function saveInvoice() {
+            alert("Invoice details updated successfully!");
+            closePopup();
+        }
+
+        // ✅ Delete Invoice
+        function deleteInvoice() {
+            if (confirm("Are you sure you want to delete this invoice?")) {
+                alert("Invoice deleted successfully!");
+                closePopup();
+            }
+        }
+
+
 
     </script>
+
+
+    <!-- ✅ Invoice Edit Popup -->
+    <div id="invoicePopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <h3>Edit Invoice</h3>
+            <label>Invoice No:</label>
+            <input type="text" id="editInvoiceNo" readonly>
+            <label>Invoice Date:</label>
+            <input type="date" id="editInvoiceDate">
+            <label>Total Amount:</label>
+            <input type="number" id="editTotalAmount">
+            <label>Paid Amount:</label>
+            <input type="number" id="editPaidAmount">
+            <label>Due Date:</label>
+            <input type="date" id="editDueDate">
+            <button onclick="saveInvoice()">Save Changes</button>
+            <button onclick="deleteInvoice()">Delete Invoice</button>
+        </div>
+    </div>
 
 </body>
 

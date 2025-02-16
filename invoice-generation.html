@@ -229,8 +229,8 @@
 const invoiceHistoryData = {
     "CUST001": {
         "PO1234": [
-            { invoiceNo: "INV001", date: "2024-01-05", total: 1200, paid: 800, dueDate: "2024-01-30" },
-            { invoiceNo: "INV002", date: "2024-02-10", total: 1500, paid: 1000, dueDate: "2024-02-28" }
+            { invoiceNo: "INV001", date: "2024-01-05", total: 1200, paid: 800, balanceDue:400, dueDate: "2024-01-30" },
+            { invoiceNo: "INV002", date: "2024-02-10", total: 1500, paid: 1000, balanceDue:500, dueDate: "2024-02-28" }
         ],
         "PO5678": [
             { invoiceNo: "INV003", date: "2024-03-15", total: 2000, paid: 2000, dueDate: "2024-04-05" }
@@ -259,6 +259,7 @@ function populateInvoiceHistory() {
                 <td>${invoice.date}</td>
                 <td>$${invoice.total.toFixed(2)}</td>
                 <td>$${invoice.paid.toFixed(2)}</td>
+                <td>$${invoice.balanceDue.toFixed(2)}</td>
                 <td>${invoice.dueDate}</td>
             `;
             historyTable.appendChild(row);

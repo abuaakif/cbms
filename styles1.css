@@ -1,0 +1,223 @@
+body {
+  background-color: #f4f4f4;
+  text-align: center;
+}
+
+/* ✅ Navbar - Keep title left and logout button right */
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Space between title and logout */
+  align-items: center;
+  padding: 5px 15px;
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+/* ✅ Wrapper to Center the Form */
+.form-container-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+}
+
+/* ✅ Scrollable Form Box */
+.form-container {
+  width: 1000px;
+  height: 600px; /* Fixed Height */
+  overflow: hidden; /* Prevent full-page scrolling */
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 20px;
+}
+
+/* ✅ Scroll only inside the form */
+.scrollable-content {
+  height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+.miniscrollable-content {
+  height: 80px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+/* ✅ Form Layout */
+/* ✅ Fix spacing between fields */
+.row:nth-child(odd) {
+  background-color: #f2f2f2; /* Light gray for odd rows */
+}
+
+.row:nth-child(even) {
+  background-color: #e0e0e0; /* Slightly darker gray for even rows */
+}
+
+.row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  padding: 10px; /* Add padding for better visibility */
+  border-radius: 5px; /* Optional: Rounds the corners */
+}
+
+/* ✅ Ensure equal width for form fields */
+.col {
+  flex: 1; /* Make all columns equal width */
+  min-width: 200px; /* Prevent fields from shrinking too much */
+}
+
+/* ✅ Prevent overlapping of input fields */
+input,
+select,
+textarea {
+  width: 100%; /* Make inputs and selects take full width */
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* ✅ Prevent textarea from being resized */
+textarea {
+  resize: none; /* Disable resizing */
+}
+
+/* ✅ Form Input Fields */
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+/* ✅ Save Button */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.navigation {
+  margin-top: 20px;
+}
+.navigation a {
+  margin: 10px;
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+}
+
+/* .dashboard-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+} */
+
+.card {
+  background: white;
+  padding: 20px;
+  margin: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+/* ✅ Aesthetic Horizontal Line */
+.section-title {
+  position: relative;
+  padding-bottom: 10px; /* Space between text and line */
+  margin-bottom: 20px;
+  font-size: 18px; /* Adjust heading size */
+  font-weight: bold;
+}
+
+/* ✅ Underline effect */
+.section-title::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 3px; /* Thickness of line */
+  background-color: #007bff; /* Change color as needed */
+  margin-top: 5px; /* Space from text */
+}
+
+/* ✅ Adjust Input Sizes for Client Form */
+#emailAddress,
+#buildingStreet,
+#city {
+  width: calc(100% - 10px); /* Ensure full width */
+}
+
+.section-divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 3px solid #007bff;
+}
+
+/* ✅ Center align table inside form */
+.table-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* ✅ Styling Table */
+#invoiceTable {
+  width: 90%; /* Adjust width */
+  border-collapse: collapse;
+}
+
+/* ✅ Styling Table Headers */
+#invoiceTable th, #invoiceTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+/* ✅ Center-align text inside S.No. column */
+.center {
+  text-align: center;
+}
+
+/* ✅ Adjust column widths */
+#invoiceTable th:nth-child(1), /* S.No */
+#invoiceTable td:nth-child(1) {
+  width: 5%; /* Smallest width */
+  text-align: center;
+}
+
+#invoiceTable th:nth-child(2), /* Details */
+#invoiceTable td:nth-child(2) {
+  width: 50%; /* Largest column */
+}
+
+#invoiceTable th:nth-child(3), /* Qty */
+#invoiceTable td:nth-child(3) {
+  width: 10%; /* Smaller column */
+}
+
+#invoiceTable th:nth-child(4), /* Price */
+#invoiceTable td:nth-child(4),
+#invoiceTable th:nth-child(5), /* Amount */
+#invoiceTable td:nth-child(5) {
+  width: 15%; /* Accommodates 7 characters */
+}
+
+/* ✅ Adjust input fields */
+#invoiceTable input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}

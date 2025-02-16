@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generation - CBMS</title>
+    <link rel="stylesheet" href="styles1.css">
+</head>
+
+<body>
+
+    <!-- ✅ Navbar -->
+    <nav class="navbar">
+        <h2>JinZ Contracting Co</h2>
+        <a href="index.html">Logout</a>
+    </nav>
+
+    <!-- ✅ Navigation Buttons -->
+    <div class="navigation">
+        <a href="dashboard.html">Home</a>
+        <a href="receivables.html">Receivables</a>
+        <a href="expenses.html">Expenses</a>
+        <a href="partners.html">Partners</a>
+        <a href="accounts.html">Accounts</a>
+        <a href="reports.html">Reports</a>
+    </div>
+
+    <!-- ✅ Invoice Form Container -->
+    <div class="form-container-wrapper">
+        <div class="form-container">
+            <form id="invoiceForm">
+
+                <div class="scrollable-content"> <!-- ✅ Scroll inside this section -->
+
+                    <h3>Generate Invoice</h3>
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Client ID:</label>
+                            <select id="clientID">
+                                <option value="">Select Client</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Client Name & Address:</label>
+                            <input type="text" id="clientDetails" readonly>
+                        </div>
+                        <div class="col">
+                            <label>Contact Person Name:</label>
+                            <input type="text" id="contactPerson" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label>PO Reference Number:</label>
+                            <select id="poNumber">
+                                <option value="">Select PO</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Project Description:</label>
+                            <input type="text" id="projectDescription" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Invoice Date:</label>
+                            <input type="date" id="invoiceDate">
+                        </div>
+                        <div class="col">
+                            <label>Due Date:</label>
+                            <input type="date" id="dueDate">
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+                    <h3>Invoice Line Items</h3>
+
+                    <table id="invoiceTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Details</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 10 Invoice Line Items -->
+                            <script>
+                                for (let i = 1; i <= 10; i++) {
+                                    document.write(`
+                                    <tr>
+                                        <td>${i}</td>
+                                        <td><input type="text" class="details"></td>
+                                        <td><input type="number" class="qty" oninput="calculateRow(this)"></td>
+                                        <td><input type="number" class="price" oninput="calculateRow(this)"></td>
+                                        <td><input type="number" class="amount" readonly></td>
+                                    </tr>`);
+                                }
+                            </script>
+                        </tbody>
+                    </table>
+
+                    <hr class="section-divider">
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Subtotal:</label>
+                            <input type="number" id="subtotal" readonly>
+                        </div>
+                        <div class="col">
+                            <label>Discount:</label>
+                            <input type="number" id="discount" oninput="calculateTotal()">
+                        </div>
+                        <div class="col">
+                            <label>VAT (%):</label>
+                            <input type="number" id="vat" oninput="calculateTotal()">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Total Amount:</label>
+                            <input type="number" id="finalTotal" readonly>
+                        </div>
+                    </div>
+
+                    <button type="submit">Generate Invoice</button>
+
+                </div>
+                <hr class="section-divider">
+                <h3>Invoice History</h3>
+                
+                <table id="invoiceHistoryTable">
+                    <thead>
+                        <tr>
+                            <th>Invoice No</th>
+                            <th>Date</th>
+                            <th>Total Amount</th>
+                            <th>Paid Amount</th>
+                            <th>Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Invoice history will be dynamically inserted here -->
+                    </tbody>
+                </table>
+                
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ✅ Auto-set today's date for Invoice Date
+        document.getElementById("invoiceDate").valueAsDate = new Date();
+
+        // ✅ Sample Data: Clients → POs → Project Details → Due Date
+        const data = {
+            "CUST001": { name: "Client A", address: "123 Street, City", contact: "John Doe", POs: {
+                "PO1234": { description: "Project Alpha", dueDate: "2024-03-15" },
+                "PO5678": { description: "Project Beta", dueDate: "2024-04-10" }
+            }},
+            "CUST002": { name: "Client B", address: "456 Road, City", contact: "Jane Smith", POs: {
+                "PO9876": { description: "Project Gamma", dueDate: "2024-05-20" }
+            }}
+        };
+
+        // ✅ Populate Client ID Dropdown
+        const clientDropdown = document.getElementById("clientID");
+        Object.keys(data).forEach(clientID => {
+            let option = document.createElement("option");
+            option.value = clientID;
+            option.textContent = clientID;
+            clientDropdown.appendChild(option);
+        });
+
+        // ✅ Populate Client Details when Client ID is selected
+        clientDropdown.addEventListener("change", function () {
+            let client = data[this.value];
+            document.getElementById("clientDetails").value = client ? `${client.name}, ${client.address}` : "";
+            document.getElementById("contactPerson").value = client ? client.contact : "";
+
+            let poDropdown = document.getElementById("poNumber");
+            poDropdown.innerHTML = `<option value="">Select PO</option>`;
+            if (client) {
+                Object.keys(client.POs).forEach(po => {
+                    let option = document.createElement("option");
+                    option.value = po;
+                    option.textContent = po;
+                    poDropdown.appendChild(option);
+                });
+            }
+        });
+
+        // ✅ Populate Project Description and Due Date when PO is selected
+        document.getElementById("poNumber").addEventListener("change", function () {
+            let client = data[clientDropdown.value];
+            let poDetails = client ? client.POs[this.value] : null;
+            document.getElementById("projectDescription").value = poDetails ? poDetails.description : "";
+            document.getElementById("dueDate").value = poDetails ? poDetails.dueDate : "";
+        });
+
+        // ✅ Calculate Amount per row
+        function calculateRow(input) {
+            let row = input.closest("tr");
+            let qty = row.querySelector(".qty").value || 0;
+            let price = row.querySelector(".price").value || 0;
+            row.querySelector(".amount").value = qty * price;
+            calculateTotal();
+        }
+
+        // ✅ Calculate Total
+        function calculateTotal() {
+            let subtotal = [...document.querySelectorAll(".amount")].reduce((sum, input) => sum + Number(input.value), 0);
+            let discount = Number(document.getElementById("discount").value) || 0;
+            let vat = Number(document.getElementById("vat").value) || 0;
+            let finalTotal = subtotal - discount + (subtotal * vat / 100);
+            document.getElementById("subtotal").value = subtotal;
+            document.getElementById("finalTotal").value = finalTotal;
+        }
+
+        // ✅ Sample Data: Invoice History
+const invoiceHistoryData = {
+    "CUST001": {
+        "PO1234": [
+            { invoiceNo: "INV001", date: "2024-01-05", total: 1200, paid: 800, dueDate: "2024-01-30" },
+            { invoiceNo: "INV002", date: "2024-02-10", total: 1500, paid: 1000, dueDate: "2024-02-28" }
+        ],
+        "PO5678": [
+            { invoiceNo: "INV003", date: "2024-03-15", total: 2000, paid: 2000, dueDate: "2024-04-05" }
+        ]
+    },
+    "CUST002": {
+        "PO9876": [
+            { invoiceNo: "INV004", date: "2024-04-01", total: 2500, paid: 500, dueDate: "2024-05-10" }
+        ]
+    }
+};
+
+// ✅ Populate Invoice History when Client ID and PO Number are Selected
+function populateInvoiceHistory() {
+    let clientID = document.getElementById("clientID").value;
+    let poNumber = document.getElementById("poNumber").value;
+    let historyTable = document.getElementById("invoiceHistoryTable").querySelector("tbody");
+    
+    historyTable.innerHTML = ""; // Clear previous data
+
+    if (clientID && poNumber && invoiceHistoryData[clientID] && invoiceHistoryData[clientID][poNumber]) {
+        invoiceHistoryData[clientID][poNumber].forEach(invoice => {
+            let row = document.createElement("tr");
+            row.innerHTML = `
+                <td><a href="#" onclick="editInvoice('${invoice.invoiceNo}')">${invoice.invoiceNo}</a></td>
+                <td>${invoice.date}</td>
+                <td>$${invoice.total.toFixed(2)}</td>
+                <td>$${invoice.paid.toFixed(2)}</td>
+                <td>${invoice.dueDate}</td>
+            `;
+            historyTable.appendChild(row);
+        });
+    }
+}
+
+// ✅ Call this function when Client or PO is selected
+document.getElementById("clientID").addEventListener("change", populateInvoiceHistory);
+document.getElementById("poNumber").addEventListener("change", populateInvoiceHistory);
+
+    </script>
+
+</body>
+
+</html>

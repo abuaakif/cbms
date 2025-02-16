@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receivables Management - CBMS</title>
+    <link rel="stylesheet" href="styles1.css">
+</head>
+
+<body>
+
+    <!-- ✅ Navbar (Fixed at the Top) -->
+    <nav class="navbar">
+        <h2>Contracting Business Management System</h2>
+        <a href="index.html">Logout</a>
+    </nav>
+
+    <!-- ✅ Navigation Buttons (Fixed Below Summary) -->
+    <div class="navigation">
+        <a href="dashboard.html" class="active">Home</a>
+        <a href="expenses.html">Expenses</a>
+        <a href="partners.html">Partners</a>
+        <a href="accounts.html">Accounts</a>
+        <a href="reports.html">Reports</a>
+    </div>
+
+    <!-- ✅ Form Container (Scrolls Inside Box) -->
+    <div class="form-container-wrapper">
+        <div class="form-container">
+
+            <form id="receivables">
+
+                <div class="scrollable-content"> <!-- ✅ Scroll only inside this section -->
+
+                    <h3>Invoice & Payment Details</h3>
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Client Name:</label>
+                            <select id="clientName">
+                                <option value="">Select Client</option>
+                                <option value="Client A">Client A</option>
+                                <option value="Client B">Client B</option>
+                            </select>
+                        </div>
+                    
+                        <div class="col">
+                            <label>Outstanding PO Number:</label>
+                            <select id="outstandingPO">
+                                <option value="">Outstanding PO</option>
+                            </select>
+                        </div>
+                    
+                        <div class="col">
+                            <label>Invoice Number:</label>
+                            <select id="invoiceNumber">
+                                <option value="">Invoice Number</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col">
+                            <label>Invoice Date:</label>
+                            <input type="date" id="invoiceDate" readonly>
+                        </div>
+                        <div class="col">
+                            <label>Due Date:</label>
+                            <input type="date" id="dueDate" readonly>
+                        </div>
+                        <div class="col">
+                            <label>Total Invoice Amount:</label>
+                            <input type="number" id="totalAmount" readonly>
+                        </div>
+                    </div>
+                    
+
+                    <hr class="section-divider">
+
+                    <h3>Payment Details</h3>
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Payment Date:</label>
+                            <input type="date" id="paymentDate">
+                        </div>
+                        <div class="col">
+                            <label>Amount Received:</label>
+                            <input type="number" id="amountReceived">
+                        </div>
+                        <div class="col">
+                            <label>Balance Due:</label>
+                            <input type="number" id="balanceDue" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Payment Method:</label>
+                            <select id="paymentMethod">
+                                <option value="">Select Method</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Check">Check</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Bank Account:</label>
+                            <select id="bankAccount">
+                                <option value="">Select Bank Account</option>
+                                <option value="Bank A">Bank A</option>
+                                <option value="Bank B">Bank B</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Reference Number:</label>
+                            <input type="text" id="referenceNumber">
+                        </div>
+                    </div>
+                    <hr class="section-divider">
+                    <h3>Additional Information</h3>
+
+                    <div class="row">
+
+                        <div class="col">
+                            <label>Recorded By:</label>
+                            <input type="text" id="recordedBy" placeholder="Auto-fetched Accountant" readonly>
+                        </div>
+                        <div class="col">
+                            <label>Approval Status:</label>
+                            <select id="approvalStatus">
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="col">
+                                <label>Payment Notes:</label>
+                                <textarea id="paymentNotes" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="section-divider">
+                    <h3>Attach Document</h3>
+                    <div class="row">
+                        <div class="col">
+                            <!-- <label>Attach Receipt:</label> -->
+                            <input type="file" id="receiptUpload">
+                        </div>
+                    </div>
+
+                    <button type="submit">Save Payment</button>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
